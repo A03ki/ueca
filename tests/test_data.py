@@ -64,6 +64,13 @@ class TestPhysicsData:
         assert length2.magnitude == 44.0
         assert str(length2.unit) == unit
 
+    def test_rmul_except_physicsdata(self):
+        unit = "meter"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 * (5 * length1)
+        assert length2.magnitude == 150.0
+        assert str(length2.unit) == unit
+
     def test_floordiv_physicsdata(self):
         length_values = [9.3, 4.0, 2.0]
         units = ["meter", "dimensionless"]
