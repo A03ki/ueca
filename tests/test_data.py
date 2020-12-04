@@ -109,3 +109,10 @@ class TestPhysicsData:
         length2 = (length1 / 2) / 2.0
         assert length2.magnitude == 2.75
         assert str(length2.unit) == unit
+
+    def test_rtruediv_except_physicsdata(self):
+        unit = "meter"
+        length1 = PhysicsData(2, unit)
+        length2 = 10.0 / (5 / length1)
+        assert length2.magnitude == 4.0
+        assert str(length2.unit) == unit
