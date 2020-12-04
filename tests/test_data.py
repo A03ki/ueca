@@ -18,6 +18,13 @@ class TestPhysicsData:
         assert length2.magnitude == 15.0
         assert str(length2.unit) == unit
 
+    def test_radd_except_physicsdata(self):
+        unit = "dimensionless"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 + (5 + length1)
+        assert length2.magnitude == 18.0
+        assert str(length2.unit) == unit
+
     def test_sub_physicsdata(self):
         length_values = [6.3, 2.5, 3.8]
         unit = "meter"
