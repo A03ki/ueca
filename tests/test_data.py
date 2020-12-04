@@ -18,6 +18,13 @@ class TestPhysicsData:
         assert length2.magnitude == 15.0
         assert str(length2.unit) == unit
 
+    def test_radd_except_physicsdata(self):
+        unit = "dimensionless"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 + (5 + length1)
+        assert length2.magnitude == 18.0
+        assert str(length2.unit) == unit
+
     def test_sub_physicsdata(self):
         length_values = [6.3, 2.5, 3.8]
         unit = "meter"
@@ -32,6 +39,13 @@ class TestPhysicsData:
         length1 = PhysicsData(11, unit)
         length2 = (length1 - 2) - 2.0
         assert length2.magnitude == 7.0
+        assert str(length2.unit) == unit
+
+    def test_rsub_except_physicsdata(self):
+        unit = "dimensionless"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 - (5 - length1)
+        assert length2.magnitude == 8.0
         assert str(length2.unit) == unit
 
     def test_mul_physicsdata(self):
@@ -50,6 +64,13 @@ class TestPhysicsData:
         assert length2.magnitude == 44.0
         assert str(length2.unit) == unit
 
+    def test_rmul_except_physicsdata(self):
+        unit = "meter"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 * (5 * length1)
+        assert length2.magnitude == 150.0
+        assert str(length2.unit) == unit
+
     def test_floordiv_physicsdata(self):
         length_values = [9.3, 4.0, 2.0]
         units = ["meter", "dimensionless"]
@@ -66,6 +87,13 @@ class TestPhysicsData:
         assert length2.magnitude == 2
         assert str(length2.unit) == unit
 
+    def test_rfloordiv_except_physicsdata(self):
+        unit = "meter"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 // (5 // length1)
+        assert length2.magnitude == 10
+        assert str(length2.unit) == unit
+
     def test_truediv_physicsdata(self):
         length_values = [9.3, 4.0, 2.325]
         units = ["meter", "dimensionless"]
@@ -80,4 +108,11 @@ class TestPhysicsData:
         length1 = PhysicsData(11, unit)
         length2 = (length1 / 2) / 2.0
         assert length2.magnitude == 2.75
+        assert str(length2.unit) == unit
+
+    def test_rtruediv_except_physicsdata(self):
+        unit = "meter"
+        length1 = PhysicsData(2, unit)
+        length2 = 10.0 / (5 / length1)
+        assert length2.magnitude == 4.0
         assert str(length2.unit) == unit

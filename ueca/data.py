@@ -26,10 +26,18 @@ class PhysicsData:
         new_data = self.data + other.data
         return PhysicsData(new_data.magnitude, str(new_data.units))
 
+    __radd__ = __add__
+
     def __sub__(self, other: Any) -> "PhysicsData":
         if not isinstance(other, PhysicsData):
             other = PhysicsData(other, "dimensionless")
         new_data = self.data - other.data
+        return PhysicsData(new_data.magnitude, str(new_data.units))
+
+    def __rsub__(self, other: Any) -> "PhysicsData":
+        if not isinstance(other, PhysicsData):
+            other = PhysicsData(other, "dimensionless")
+        new_data = other.data - self.data
         return PhysicsData(new_data.magnitude, str(new_data.units))
 
     def __mul__(self, other: Any) -> "PhysicsData":
@@ -37,6 +45,8 @@ class PhysicsData:
             other = PhysicsData(other, "dimensionless")
         new_data = self.data * other.data
         return PhysicsData(new_data.magnitude, str(new_data.units))
+
+    __rmul__ = __mul__
 
     def __floordiv__(self, other: Any) -> "PhysicsData":
         if not isinstance(other, PhysicsData):
@@ -46,10 +56,24 @@ class PhysicsData:
         new_units = self.data.units / other.data.units
         return PhysicsData(new_magnitude, str(new_units))
 
+    def __rfloordiv__(self, other: Any) -> "PhysicsData":
+        if not isinstance(other, PhysicsData):
+            other = PhysicsData(other, "dimensionless")
+
+        new_magnitude = other.data.magnitude // self.data.magnitude
+        new_units = self.data.units / other.data.units
+        return PhysicsData(new_magnitude, str(new_units))
+
     def __truediv__(self, other: Any) -> "PhysicsData":
         if not isinstance(other, PhysicsData):
             other = PhysicsData(other, "dimensionless")
         new_data = self.data / other.data
+        return PhysicsData(new_data.magnitude, str(new_data.units))
+
+    def __rtruediv__(self, other: Any) -> "PhysicsData":
+        if not isinstance(other, PhysicsData):
+            other = PhysicsData(other, "dimensionless")
+        new_data = other.data / self.data
         return PhysicsData(new_data.magnitude, str(new_data.units))
 
     def __repr__(self) -> str:
