@@ -87,6 +87,13 @@ class TestPhysicsData:
         assert length2.magnitude == 2
         assert str(length2.unit) == unit
 
+    def test_rfloordiv_except_physicsdata(self):
+        unit = "meter"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 // (5 // length1)
+        assert length2.magnitude == 10
+        assert str(length2.unit) == unit
+
     def test_truediv_physicsdata(self):
         length_values = [9.3, 4.0, 2.325]
         units = ["meter", "dimensionless"]
