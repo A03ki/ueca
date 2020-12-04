@@ -41,8 +41,10 @@ class PhysicsData:
     def __floordiv__(self, other: Any) -> "PhysicsData":
         if not isinstance(other, PhysicsData):
             other = PhysicsData(other, "dimensionless")
-        new_data = self.data // other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units))
+
+        new_magnitude = self.data.magnitude // other.data.magnitude
+        new_units = self.data.units / other.data.units
+        return PhysicsData(new_magnitude, str(new_units))
 
     def __truediv__(self, other: Any) -> "PhysicsData":
         if not isinstance(other, PhysicsData):
