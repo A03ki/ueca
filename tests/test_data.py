@@ -41,6 +41,13 @@ class TestPhysicsData:
         assert length2.magnitude == 7.0
         assert str(length2.unit) == unit
 
+    def test_rsub_except_physicsdata(self):
+        unit = "dimensionless"
+        length1 = PhysicsData(3, unit)
+        length2 = 10.0 - (5 - length1)
+        assert length2.magnitude == 8.0
+        assert str(length2.unit) == unit
+
     def test_mul_physicsdata(self):
         length_values = [7.0, 3.0, 21.0]
         units = ["meter", "meter ** 2"]
