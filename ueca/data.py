@@ -1,16 +1,30 @@
 import pint
+import sympy
 
-
-from typing import Any
+import copy
+from typing import Any, Optional
 
 
 ureg = pint.UnitRegistry()
 
 
 class PhysicsData:
-    def __init__(self, magnitude, unit: str, left_side: str = "") -> None:
+    def __init__(self, magnitude, unit: str, left_side: str = "",
+                 symbols: Optional[dict] = None) -> None:
+        if isinstance(magnitude, str):
+            if not magnitude.isdecimal() and magnitude != "":
+                magnitude = sympy.Symbol(magnitude)
+
         self.data = ureg.Quantity(magnitude, unit)
         self.left_side = left_side
+
+        if symbols is None:
+            self.symbols = dict()
+        else:
+            self.symbols = symbols
+
+        if isinstance(magnitude, sympy.Symbol) and magnitude not in self.symbols:
+            self.symbols[str(magnitude)] = str(self.data.units)
 
     @property
     def magnitude(self) -> Any:
@@ -22,49 +36,65 @@ class PhysicsData:
 
     def __add__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_data = self.data + other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units))
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     __radd__ = __add__
 
     def __sub__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_data = self.data - other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units))
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __rsub__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_data = other.data - self.data
-        return PhysicsData(new_data.magnitude, str(new_data.units))
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __mul__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_data = self.data * other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units))
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     __rmul__ = __mul__
 
     def __floordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_magnitude = self.data.magnitude // other.data.magnitude
         new_units = self.data.units / other.data.units
-        return PhysicsData(new_magnitude, str(new_units))
+        return PhysicsData(new_magnitude, str(new_units), symbols=symbols)
 
     def __rfloordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_magnitude = other.data.magnitude // self.data.magnitude
         new_units = self.data.units / other.data.units
-        return PhysicsData(new_magnitude, str(new_units))
+        return PhysicsData(new_magnitude, str(new_units), symbols=symbols)
 
     def __truediv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_data = self.data / other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units))
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __rtruediv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
+        symbols = copy.deepcopy(self.symbols)
+        symbols.update(other.symbols)
         new_data = other.data / self.data
-        return PhysicsData(new_data.magnitude, str(new_data.units))
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __repr__(self) -> str:
         return str(self.data)

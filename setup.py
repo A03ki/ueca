@@ -19,7 +19,7 @@ setup_args = {
     "author_email": "a03ki04@gmail.com",
     "url": "https://github.com/A03ki/ueca",
     "python_requires": ">=3.6, <3.9",
-    "install_requires": ["numpy", "pint", "uncertainties"],
+    "install_requires": ["numpy", "pint", "sympy", "uncertainties"],
     "extras_require": {"tests": ["pytest"]},
     "packages": find_packages(),
     "include_package_data": True,
