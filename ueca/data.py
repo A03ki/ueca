@@ -1,5 +1,5 @@
 import pint
-
+import sympy
 
 from typing import Any
 
@@ -9,6 +9,10 @@ ureg = pint.UnitRegistry()
 
 class PhysicsData:
     def __init__(self, magnitude, unit: str, left_side: str = "") -> None:
+        if isinstance(magnitude, str):
+            if not magnitude.isdecimal() and magnitude != "":
+                magnitude = sympy.Symbol(magnitude)
+
         self.data = ureg.Quantity(magnitude, unit)
         self.left_side = left_side
 
