@@ -1,4 +1,4 @@
-from ueca.data import PhysicsData
+from ueca.data import PhysicsData, as_physicsdata
 
 
 class TestPhysicsData:
@@ -116,3 +116,21 @@ class TestPhysicsData:
         length2 = 10.0 / (5 / length1)
         assert length2.magnitude == 4.0
         assert str(length2.unit) == unit
+
+
+def test_as_physicsdata_physicsdata():
+    unit = "meter"
+    magnitude = 2
+    x = PhysicsData(magnitude, unit)
+    assert isinstance(x, PhysicsData)
+    assert x.magnitude == magnitude
+    assert x.unit == unit
+
+
+def test_as_physicsdata_except_physicsdata():
+    unit = "dimensionless"
+    magnitude = 2
+    x = as_physicsdata(magnitude)
+    assert isinstance(x, PhysicsData)
+    assert x.magnitude == magnitude
+    assert x.unit == unit
