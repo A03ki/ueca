@@ -114,6 +114,8 @@ def test_exp():
     length2 = exp(length1)
     assert str(length2.magnitude) == "exp(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_log():
@@ -121,6 +123,8 @@ def test_log():
     length2 = log(length1)
     assert str(length2.magnitude) == "log(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_ln():
@@ -128,6 +132,8 @@ def test_ln():
     length2 = ln(length1)
     assert str(length2.magnitude) == "log(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_sqrt():
@@ -135,6 +141,8 @@ def test_sqrt():
     length2 = sqrt(length1)
     assert str(length2.magnitude) == "sqrt(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_sin():
@@ -142,6 +150,8 @@ def test_sin():
     length2 = sin(length1)
     assert str(length2.magnitude) == "sin(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_cos():
@@ -149,6 +159,8 @@ def test_cos():
     length2 = cos(length1)
     assert str(length2.magnitude) == "cos(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_tan():
@@ -156,6 +168,8 @@ def test_tan():
     length2 = tan(length1)
     assert str(length2.magnitude) == "tan(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_asin():
@@ -163,6 +177,8 @@ def test_asin():
     length2 = asin(length1)
     assert str(length2.magnitude) == "asin(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_acos():
@@ -170,6 +186,8 @@ def test_acos():
     length2 = acos(length1)
     assert str(length2.magnitude) == "acos(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_atan():
@@ -177,6 +195,8 @@ def test_atan():
     length2 = atan(length1)
     assert str(length2.magnitude) == "atan(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_sinh():
@@ -184,6 +204,8 @@ def test_sinh():
     length2 = sinh(length1)
     assert str(length2.magnitude) == "sinh(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_conh():
@@ -191,6 +213,8 @@ def test_conh():
     length2 = cosh(length1)
     assert str(length2.magnitude) == "cosh(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_tanh():
@@ -198,6 +222,8 @@ def test_tanh():
     length2 = tanh(length1)
     assert str(length2.magnitude) == "tanh(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_asinh():
@@ -205,6 +231,8 @@ def test_asinh():
     length2 = asinh(length1)
     assert str(length2.magnitude) == "asinh(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_acosh():
@@ -212,6 +240,8 @@ def test_acosh():
     length2 = acosh(length1)
     assert str(length2.magnitude) == "acosh(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
 
 
 def test_atanh():
@@ -219,3 +249,5 @@ def test_atanh():
     length2 = atanh(length1)
     assert str(length2.magnitude) == "atanh(x)"
     assert length2.unit == length1.unit
+    assert length2.left_side == length1.left_side
+    assert length2.symbols == length1.symbols
