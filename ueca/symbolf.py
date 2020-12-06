@@ -36,9 +36,12 @@ def diff_symbol(obj: PhysicsData, symbol: str, n: int) -> PhysicsData:
     else:
         raise TypeError(f"unsupport differentiation by type of '{symbol.__class__.__name__}'")
 
+    new_magnitude = sympy.diff(obj.magnitude, symbol, n)
     new_unit = str(obj.data.units / (tgt_units ** n))
-    return PhysicsData(sympy.diff(obj.magnitude, symbol, n), new_unit, left_side=obj.left_side,
-                       symbols=obj.symbols)
+    _free_symbol_keys = [str(i) for i in new_magnitude.free_symbols]
+    new_symbols = {k: v for k, v in obj.symbols.items() if k in _free_symbol_keys}
+    return PhysicsData(new_magnitude, new_unit, left_side=obj.left_side,
+                       symbols=new_symbols)
 
 
 @physicsdata_symbolic_exception
