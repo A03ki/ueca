@@ -25,6 +25,7 @@ class TestDiffSymbol:  # test for diff_symbol
         value = diff_symbol(length, length, 1)
         assert str(value.magnitude) == symbols[1]
         assert value.unit == units[1]
+        assert value.symbols == dict()
 
     def test_input_physicsdata_add(self):
         length1 = PhysicsData("x", "meter")
@@ -42,7 +43,7 @@ class TestDiffSymbol:  # test for diff_symbol
 
     def test_input_physicsdata_mul(self):
         symbols = ["m", "a", "a*m"]
-        units = ["kg", "meter / second**2", "kilogram * meter / second ** 2"]
+        units = ["kilogram", "meter / second**2", "kilogram * meter / second ** 2"]
         mass = PhysicsData(symbols[0], units[0])
         acceleration = PhysicsData(symbols[1], units[1])
         power = mass * acceleration
@@ -51,9 +52,11 @@ class TestDiffSymbol:  # test for diff_symbol
         acceleration2 = diff_symbol(power, mass, 1)
         assert acceleration.magnitude == acceleration2.magnitude
         assert acceleration.unit == acceleration2.unit
+        assert acceleration.symbols == acceleration2.symbols
         mass2 = diff_symbol(power, acceleration, 1)
         assert mass.magnitude == mass2.magnitude
         assert mass.unit == mass2.unit
+        assert mass.symbols == mass2.symbols
 
     def test_input_physicsdata_pow(self):
         symbols = ["l1", "3*l1**2", "6*l1"]
@@ -64,9 +67,11 @@ class TestDiffSymbol:  # test for diff_symbol
         area2 = diff_symbol(volume, length, 1)
         assert str(area2.magnitude) == symbols[1]
         assert area.unit == area2.unit
+        assert area.symbols == area2.symbols
         length2 = diff_symbol(volume, length, 2)
         assert str(length2.magnitude) == symbols[2]
         assert length.unit == length2.unit
+        assert length.symbols == length2.symbols
 
     def test_input_string_symbol(self):
         symbols = ["l1", "l2", "l1*l2**2", "l2**2", "2*l2", "2"]
@@ -79,12 +84,15 @@ class TestDiffSymbol:  # test for diff_symbol
         area = diff_symbol(volume, length1, 1)
         assert str(area.magnitude) == symbols[3]
         assert area.unit == units[1]
+        assert area.symbols == {symbols[1]: units[0]}
         length3 = diff_symbol(area, length2, 1)
         assert str(length3.magnitude) == symbols[4]
         assert length3.unit == units[0]
+        assert length3.symbols == {symbols[1]: units[0]}
         value = diff_symbol(length3, length2, 1)
         assert str(value.magnitude) == symbols[5]
         assert value.unit == units[3]
+        assert value.symbols == dict()
 
     def test_input_unexpected_type(self):
         length = PhysicsData("l1", "meter")
@@ -107,6 +115,7 @@ class TestDiffSymbol:  # test for diff_symbol
         value2 = diff_symbol(value, "l2", 1)
         assert str(value2.magnitude) == "0"
         assert value2.unit == unit
+        assert value2.symbols == dict()
 
 
 def test_exp():
