@@ -117,6 +117,23 @@ class TestPhysicsData:
         assert length2.magnitude == 4.0
         assert str(length2.unit) == unit
 
+    def test_pow_physicsdata(self):
+        units = ["meter", "dimensionless", "meter ** 5"]
+        length_values = [2, 32]
+        length1 = PhysicsData(length_values[0], units[0])
+        value = PhysicsData(5, units[1])
+        length2 = length1 ** value
+        assert length2.magnitude == length_values[1]
+        assert str(length2.unit) == units[2]
+
+    def test_pow_except_physicsdata(self):
+        units = ["meter", "meter ** 5"]
+        length_values = [2, 32]
+        length1 = PhysicsData(length_values[0], units[0])
+        length2 = length1 ** 5
+        assert length2.magnitude == length_values[1]
+        assert str(length2.unit) == units[1]
+
 
 class TestPhysicsDataSymbol:
     def test_add(self):
@@ -183,6 +200,16 @@ class TestPhysicsDataSymbol:
         assert len(length1.symbols) == 1
         assert len(length2.symbols) == 1
         assert len(length3.symbols) == 2
+
+    def test_pow(self):
+        symbols = ["x", "x**3"]
+        units = ["meter", "dimensionless"]
+        length1 = PhysicsData(symbols[0], units[0])
+        value = PhysicsData(3, "dimensionless")
+        length2 = length1 ** value
+        assert str(length2.magnitude) == symbols[1]
+        assert length2.symbols[symbols[0]] == units[0]
+        assert len(length2.symbols) == 1
 
 
 def test_as_physicsdata_physicsdata():
