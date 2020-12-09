@@ -2,7 +2,7 @@ import pint
 import sympy
 
 import copy
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 
 ureg = pint.UnitRegistry()
@@ -94,6 +94,12 @@ class PhysicsData:
         symbols = copy.deepcopy(self.symbols)
         symbols.update(other.symbols)
         new_data = other.data / self.data
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+
+    def __pow__(self, n: Union[int, float]) -> "PhysicsData":
+        other = as_physicsdata(n)
+        symbols = copy.deepcopy(self.symbols)
+        new_data = self.data ** other.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __repr__(self) -> str:
