@@ -143,11 +143,11 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length1 + length2 + length1
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3.symbols[length_symbols[0]] == unit
-        assert length3.symbols[length_symbols[1]] == unit
-        assert len(length1.symbols) == 1
-        assert len(length2.symbols) == 1
-        assert len(length3.symbols) == 2
+        assert length3._base_symbols[length_symbols[0]] == unit
+        assert length3._base_symbols[length_symbols[1]] == unit
+        assert len(length1._base_symbols) == 1
+        assert len(length2._base_symbols) == 1
+        assert len(length3._base_symbols) == 2
 
     def test_sub(self):
         length_symbols = ["x", "y_n", "x - 2*y_n"]
@@ -156,11 +156,11 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length1 - length2 - length2
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3.symbols[length_symbols[0]] == unit
-        assert length3.symbols[length_symbols[1]] == unit
-        assert len(length1.symbols) == 1
-        assert len(length2.symbols) == 1
-        assert len(length3.symbols) == 2
+        assert length3._base_symbols[length_symbols[0]] == unit
+        assert length3._base_symbols[length_symbols[1]] == unit
+        assert len(length1._base_symbols) == 1
+        assert len(length2._base_symbols) == 1
+        assert len(length3._base_symbols) == 2
 
     def test_mul(self):
         length_symbols = ["x_a", "y_b", "x_a*y_b**2"]
@@ -169,11 +169,11 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length2 * length1 * length2
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3.symbols[length_symbols[0]] == unit
-        assert length3.symbols[length_symbols[1]] == unit
-        assert len(length1.symbols) == 1
-        assert len(length2.symbols) == 1
-        assert len(length3.symbols) == 2
+        assert length3._base_symbols[length_symbols[0]] == unit
+        assert length3._base_symbols[length_symbols[1]] == unit
+        assert len(length1._base_symbols) == 1
+        assert len(length2._base_symbols) == 1
+        assert len(length3._base_symbols) == 2
 
     def test_floordiv(self):
         length_symbols = ["x", "y", "floor(floor(y/x)/x)"]
@@ -182,11 +182,11 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length2 // length1 // length1
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3.symbols[length_symbols[0]] == unit
-        assert length3.symbols[length_symbols[1]] == unit
-        assert len(length1.symbols) == 1
-        assert len(length2.symbols) == 1
-        assert len(length3.symbols) == 2
+        assert length3._base_symbols[length_symbols[0]] == unit
+        assert length3._base_symbols[length_symbols[1]] == unit
+        assert len(length1._base_symbols) == 1
+        assert len(length2._base_symbols) == 1
+        assert len(length3._base_symbols) == 2
 
     def test_truediv(self):
         length_symbols = ["x_n", "y_n", "y_n/x_n**2"]
@@ -195,11 +195,11 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length2 / length1 / length1
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3.symbols[length_symbols[0]] == unit
-        assert length3.symbols[length_symbols[1]] == unit
-        assert len(length1.symbols) == 1
-        assert len(length2.symbols) == 1
-        assert len(length3.symbols) == 2
+        assert length3._base_symbols[length_symbols[0]] == unit
+        assert length3._base_symbols[length_symbols[1]] == unit
+        assert len(length1._base_symbols) == 1
+        assert len(length2._base_symbols) == 1
+        assert len(length3._base_symbols) == 2
 
     def test_pow(self):
         symbols = ["x", "x**3"]
@@ -208,8 +208,8 @@ class TestPhysicsDataSymbol:
         value = PhysicsData(3, "dimensionless")
         length2 = length1 ** value
         assert str(length2.magnitude) == symbols[1]
-        assert length2.symbols[symbols[0]] == units[0]
-        assert len(length2.symbols) == 1
+        assert length2._base_symbols[symbols[0]] == units[0]
+        assert len(length2._base_symbols) == 1
 
 
 def test_as_physicsdata_physicsdata():

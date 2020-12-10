@@ -25,7 +25,7 @@ class TestDiffSymbol:  # test for diff_symbol
         value = diff_symbol(length, length, 1)
         assert str(value.magnitude) == symbols[1]
         assert value.unit == units[1]
-        assert value.symbols == dict()
+        assert value._base_symbols == dict()
 
     def test_input_physicsdata_add(self):
         length1 = PhysicsData("x", "meter")
@@ -52,11 +52,11 @@ class TestDiffSymbol:  # test for diff_symbol
         acceleration2 = diff_symbol(power, mass, 1)
         assert acceleration.magnitude == acceleration2.magnitude
         assert acceleration.unit == acceleration2.unit
-        assert acceleration.symbols == acceleration2.symbols
+        assert acceleration._base_symbols == acceleration2._base_symbols
         mass2 = diff_symbol(power, acceleration, 1)
         assert mass.magnitude == mass2.magnitude
         assert mass.unit == mass2.unit
-        assert mass.symbols == mass2.symbols
+        assert mass._base_symbols == mass2._base_symbols
 
     def test_input_physicsdata_pow(self):
         symbols = ["l1", "3*l1**2", "6*l1"]
@@ -67,11 +67,11 @@ class TestDiffSymbol:  # test for diff_symbol
         area2 = diff_symbol(volume, length, 1)
         assert str(area2.magnitude) == symbols[1]
         assert area.unit == area2.unit
-        assert area.symbols == area2.symbols
+        assert area._base_symbols == area2._base_symbols
         length2 = diff_symbol(volume, length, 2)
         assert str(length2.magnitude) == symbols[2]
         assert length.unit == length2.unit
-        assert length.symbols == length2.symbols
+        assert length._base_symbols == length2._base_symbols
 
     def test_input_string_symbol(self):
         symbols = ["l1", "l2", "l1*l2**2", "l2**2", "2*l2", "2"]
@@ -84,15 +84,15 @@ class TestDiffSymbol:  # test for diff_symbol
         area = diff_symbol(volume, length1, 1)
         assert str(area.magnitude) == symbols[3]
         assert area.unit == units[1]
-        assert area.symbols == {symbols[1]: units[0]}
+        assert area._base_symbols == {symbols[1]: units[0]}
         length3 = diff_symbol(area, length2, 1)
         assert str(length3.magnitude) == symbols[4]
         assert length3.unit == units[0]
-        assert length3.symbols == {symbols[1]: units[0]}
+        assert length3._base_symbols == {symbols[1]: units[0]}
         value = diff_symbol(length3, length2, 1)
         assert str(value.magnitude) == symbols[5]
         assert value.unit == units[3]
-        assert value.symbols == dict()
+        assert value._base_symbols == dict()
 
     def test_input_unexpected_type(self):
         length = PhysicsData("l1", "meter")
@@ -115,7 +115,7 @@ class TestDiffSymbol:  # test for diff_symbol
         value2 = diff_symbol(value, "l2", 1)
         assert str(value2.magnitude) == "0"
         assert value2.unit == unit
-        assert value2.symbols == dict()
+        assert value2._base_symbols == dict()
 
 
 def test_exp():
@@ -123,7 +123,7 @@ def test_exp():
     length2 = exp(length1)
     assert str(length2.magnitude) == "exp(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_log():
@@ -131,7 +131,7 @@ def test_log():
     length2 = log(length1)
     assert str(length2.magnitude) == "log(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_ln():
@@ -139,7 +139,7 @@ def test_ln():
     length2 = ln(length1)
     assert str(length2.magnitude) == "log(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_sqrt():
@@ -147,7 +147,7 @@ def test_sqrt():
     length2 = sqrt(length1)
     assert str(length2.magnitude) == "sqrt(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_sin():
@@ -155,7 +155,7 @@ def test_sin():
     length2 = sin(length1)
     assert str(length2.magnitude) == "sin(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_cos():
@@ -163,7 +163,7 @@ def test_cos():
     length2 = cos(length1)
     assert str(length2.magnitude) == "cos(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_tan():
@@ -171,7 +171,7 @@ def test_tan():
     length2 = tan(length1)
     assert str(length2.magnitude) == "tan(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_asin():
@@ -179,7 +179,7 @@ def test_asin():
     length2 = asin(length1)
     assert str(length2.magnitude) == "asin(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_acos():
@@ -187,7 +187,7 @@ def test_acos():
     length2 = acos(length1)
     assert str(length2.magnitude) == "acos(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_atan():
@@ -195,7 +195,7 @@ def test_atan():
     length2 = atan(length1)
     assert str(length2.magnitude) == "atan(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_sinh():
@@ -203,7 +203,7 @@ def test_sinh():
     length2 = sinh(length1)
     assert str(length2.magnitude) == "sinh(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_conh():
@@ -211,7 +211,7 @@ def test_conh():
     length2 = cosh(length1)
     assert str(length2.magnitude) == "cosh(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_tanh():
@@ -219,7 +219,7 @@ def test_tanh():
     length2 = tanh(length1)
     assert str(length2.magnitude) == "tanh(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_asinh():
@@ -227,7 +227,7 @@ def test_asinh():
     length2 = asinh(length1)
     assert str(length2.magnitude) == "asinh(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_acosh():
@@ -235,7 +235,7 @@ def test_acosh():
     length2 = acosh(length1)
     assert str(length2.magnitude) == "acosh(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols
 
 
 def test_atanh():
@@ -243,4 +243,4 @@ def test_atanh():
     length2 = atanh(length1)
     assert str(length2.magnitude) == "atanh(x)"
     assert length2.unit == length1.unit
-    assert length2.symbols == length1.symbols
+    assert length2._base_symbols == length1._base_symbols

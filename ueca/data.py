@@ -19,12 +19,12 @@ class PhysicsData:
         self.left_side = left_side
 
         if symbols is None:
-            self.symbols = dict()
+            self._base_symbols = dict()
         else:
-            self.symbols = symbols
+            self._base_symbols = symbols
 
-        if isinstance(magnitude, sympy.Symbol) and magnitude not in self.symbols:
-            self.symbols[str(magnitude)] = str(self.data.units)
+        if isinstance(magnitude, sympy.Symbol) and magnitude not in self._base_symbols:
+            self._base_symbols[str(magnitude)] = str(self.data.units)
 
     @property
     def magnitude(self) -> Any:
@@ -36,8 +36,8 @@ class PhysicsData:
 
     def __add__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_data = self.data + other.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
@@ -45,22 +45,22 @@ class PhysicsData:
 
     def __sub__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_data = self.data - other.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __rsub__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_data = other.data - self.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __mul__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_data = self.data * other.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
@@ -68,37 +68,37 @@ class PhysicsData:
 
     def __floordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_magnitude = self.data.magnitude // other.data.magnitude
         new_units = self.data.units / other.data.units
         return PhysicsData(new_magnitude, str(new_units), symbols=symbols)
 
     def __rfloordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_magnitude = other.data.magnitude // self.data.magnitude
         new_units = self.data.units / other.data.units
         return PhysicsData(new_magnitude, str(new_units), symbols=symbols)
 
     def __truediv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_data = self.data / other.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __rtruediv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
+        symbols.update(other._base_symbols)
         new_data = other.data / self.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
     def __pow__(self, n: Union[int, float]) -> "PhysicsData":
         other = as_physicsdata(n)
-        symbols = copy.deepcopy(self.symbols)
+        symbols = copy.deepcopy(self._base_symbols)
         new_data = self.data ** other.data
         return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
 
