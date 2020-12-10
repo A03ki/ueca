@@ -1,3 +1,5 @@
+import sympy
+
 from ueca.data import PhysicsData, as_physicsdata
 
 
@@ -133,6 +135,12 @@ class TestPhysicsData:
         length2 = length1 ** 5
         assert length2.magnitude == length_values[1]
         assert str(length2.unit) == units[1]
+
+    def test_is_symbolic(self):
+        length1 = PhysicsData(2, "meter")
+        length2 = PhysicsData(2, "meter", symbol=sympy.Symbol("x"))
+        assert not length1.is_symbolic()
+        assert length2.is_symbolic()
 
 
 class TestPhysicsDataSymbol:

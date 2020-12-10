@@ -10,12 +10,14 @@ ureg = pint.UnitRegistry()
 
 class PhysicsData:
     def __init__(self, magnitude, unit: str, left_side: str = "",
+                 symbol: Optional[Union[str, sympy.Basic]] = None,
                  base_symbols: Optional[dict] = None) -> None:
         if isinstance(magnitude, str):
             if not magnitude.isdecimal() and magnitude != "":
                 magnitude = sympy.Symbol(magnitude)
 
         self.data = ureg.Quantity(magnitude, unit)
+        self.symbol = symbol
         self.left_side = left_side
 
         if base_symbols is None:
@@ -33,6 +35,11 @@ class PhysicsData:
     @property
     def unit(self) -> str:
         return str(self.data.units)
+
+    def is_symbolic(self):
+        if isinstance(self.symbol, sympy.Basic):
+            return True
+        return False
 
     def __add__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
