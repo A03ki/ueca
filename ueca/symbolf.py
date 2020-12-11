@@ -35,6 +35,12 @@ def dimensionless_exception(obj: PhysicsData) -> None:
 
 
 @physicsdata_symbolic_exception
+def cancel(obj: PhysicsData) -> PhysicsData:
+    expr = sympy.cancel(obj.symbol)
+    return PhysicsData(None, obj.unit, symbol=expr, base_symbols=obj._base_symbols)
+
+
+@physicsdata_symbolic_exception
 def diff_symbol(obj: PhysicsData, symbol: str, n: int) -> PhysicsData:
     if not (obj.symbol.is_Atom or obj.symbol.is_Pow or obj.symbol.is_Mul):
         raise ValueError(f"unsupport differentiation for: '{obj.symbol}'")
