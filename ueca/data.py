@@ -183,7 +183,7 @@ class PhysicsData:
         return text
 
 
-def as_physicsdata(obj) -> PhysicsData:
+def as_physicsdata(obj, symbol=None) -> PhysicsData:
     if not isinstance(obj, PhysicsData):
-        obj = PhysicsData(obj, "dimensionless")
+        obj = PhysicsData(obj, "dimensionless", symbol=symbol)
     return obj
