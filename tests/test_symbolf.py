@@ -3,7 +3,7 @@ import pytest
 from ueca.data import PhysicsData
 from ueca.symbolf import (physicsdata_symbolic_exception,
                           as_symbolic_physicsdata_and_dimensionless_exception, diff_symbol,
-                          exp, log, ln, sqrt, sin, cos, tan, asin, acos, atan,
+                          Rational, exp, log, ln, sqrt, sin, cos, tan, asin, acos, atan,
                           sinh, cosh, tanh, asinh, acosh, atanh)
 
 
@@ -140,6 +140,18 @@ class TestDiffSymbol:  # test for diff_symbol
         assert value2.magnitude == 0
         assert value2.unit == unit
         assert value2._base_symbols == dict()
+
+
+def test_Rational():
+    value1 = Rational(1, 2)
+    assert str(value1.symbol) == "1/2"
+    assert value1.unit == "dimensionless"
+    value2 = Rational(0.5)
+    assert str(value2.symbol) == "1/2"
+    assert value2.unit == "dimensionless"
+    value3 = Rational("3", "4")
+    assert str(value3.symbol) == "3/4"
+    assert value3.unit == "dimensionless"
 
 
 def test_exp():

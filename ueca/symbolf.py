@@ -1,4 +1,8 @@
+from numbers import Real
+from typing import Optional, Union
+
 import sympy
+
 from ueca.data import as_physicsdata, PhysicsData, ureg
 
 
@@ -57,6 +61,16 @@ def diff_symbol(obj: PhysicsData, symbol: str, n: int) -> PhysicsData:
     _free_symbol_keys = [str(i) for i in new_symbol.free_symbols]
     new_symbols = {k: v for k, v in obj._base_symbols.items() if k in _free_symbol_keys}
     return PhysicsData(None, new_unit, symbol=new_symbol, base_symbols=new_symbols)
+
+
+def Rational(obj1: Union[Real, str], obj2: Optional[Union[Real, str]] = None,
+             apply_dim: bool = False) -> PhysicsData:
+    if obj2 is None:
+        expr = sympy.Rational(obj1)
+    else:
+        expr = sympy.Rational(obj1, obj2)
+
+    return PhysicsData(None, "dimensionless", symbol=expr)
 
 
 @as_symbolic_physicsdata_and_dimensionless_exception
