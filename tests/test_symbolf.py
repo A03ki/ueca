@@ -2,7 +2,8 @@ import pytest
 
 from ueca.data import PhysicsData
 from ueca.symbolf import (physicsdata_symbolic_exception,
-                          as_symbolic_physicsdata_and_dimensionless_exception, diff_symbol,
+                          as_symbolic_physicsdata_and_dimensionless_exception,
+                          cancel, diff_symbol,
                           Rational, exp, log, ln, sqrt, sin, cos, tan, asin, acos, atan,
                           sinh, cosh, tanh, asinh, acosh, atanh)
 
@@ -22,6 +23,16 @@ def test_physicsdata_symbolic_dimensionless_exception():
     length = PhysicsData(1, "meter", symbol="x")
     with pytest.raises(ValueError):
         as_symbolic_physicsdata_and_dimensionless_exception(lambda x: x)(length)
+
+
+def test_cancel():
+    symbols = ["x", "4*(x + y)**2/(4*x + 4*y)", "x + y"]
+    length1 = PhysicsData(2, "meter", symbol=symbols[0])
+    length2 = PhysicsData(2, "meter", symbol="y")
+    length3 = 4 * (length1 + length2) ** 2 / (4 * (length1 + length2))
+    assert str(length3.symbol) == symbols[1]
+    length4 = cancel(length3)
+    assert str(length4.symbol) == symbols[2]
 
 
 class TestDiffSymbol:  # test for diff_symbol
