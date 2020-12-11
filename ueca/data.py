@@ -29,8 +29,8 @@ class PhysicsData:
         else:
             self._base_symbols = base_symbols
 
-        if isinstance(self.magnitude, sympy.Symbol) and self.magnitude not in self._base_symbols:
-            self._base_symbols[str(self.magnitude)] = ureg.Quantity(magnitude, unit)
+        if isinstance(symbol, sympy.Symbol) and str(symbol) not in self._base_symbols:
+            self._base_symbols[str(symbol)] = ureg.Quantity(magnitude, unit)
 
     @property
     def magnitude(self) -> Any:
