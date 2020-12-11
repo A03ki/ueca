@@ -73,10 +73,17 @@ def ln(obj: PhysicsData) -> PhysicsData:
     return PhysicsData(None, obj.unit, symbol=expr, base_symbols=obj._base_symbols)
 
 
-@physicsdata_symbolic_dimensionless_exception
-def sqrt(obj: PhysicsData) -> PhysicsData:
+@physicsdata_symbolic_exception
+def sqrt(obj: PhysicsData, apply_dim: bool = False) -> PhysicsData:
     expr = sympy.sqrt(obj.symbol)
-    return PhysicsData(None, obj.unit, symbol=expr, base_symbols=obj._base_symbols)
+    if apply_dim:
+        unit = str(obj.data.units ** (1 / 2))
+    else:
+        if obj.unit != "dimensionless":
+            raise ValueError("Support the unit called dimensionless only. "
+                             f"Unit of input: '{obj.unit}'")
+        unit = obj.unit
+    return PhysicsData(None, unit, symbol=expr, base_symbols=obj._base_symbols)
 
 
 @physicsdata_symbolic_dimensionless_exception

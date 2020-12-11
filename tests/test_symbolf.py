@@ -182,6 +182,15 @@ def test_sqrt():
         sqrt(PhysicsData(1, "meter", symbol="x"))
 
 
+def test_sqrt_apply_dim():
+    units = ["meter ** 2", "meter"]
+    area = PhysicsData(5, units[0], symbol="x")
+    length = sqrt(area, apply_dim=True)
+    assert str(length.symbol) == "sqrt(x)"
+    assert length.unit == units[1]
+    assert area._base_symbols == length._base_symbols
+
+
 def test_sin():
     length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = sin(length1)
