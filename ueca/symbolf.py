@@ -18,12 +18,16 @@ def as_symbolic_physicsdata_and_dimensionless_exception(func):
     def wrapper(obj: PhysicsData, *args, **kwargs):
         obj = as_physicsdata(obj, symbol=str(obj))
 
-        if obj.unit != "dimensionless":
-            raise ValueError("Support the unit called dimensionless only. "
-                             f"Unit of input: '{obj.unit}'")
+        dimensionless_exception(obj)
 
         return func(obj, *args, **kwargs)
     return wrapper
+
+
+def dimensionless_exception(obj: PhysicsData) -> None:
+    if obj.unit != "dimensionless":
+        raise ValueError("Support the unit called dimensionless only. "
+                         f"Unit of input: '{obj.unit}'")
 
 
 @physicsdata_symbolic_exception
@@ -79,9 +83,7 @@ def sqrt(obj: PhysicsData, apply_dim: bool = False) -> PhysicsData:
     if apply_dim:
         unit = str(obj.data.units ** (1 / 2))
     else:
-        if obj.unit != "dimensionless":
-            raise ValueError("Support the unit called dimensionless only. "
-                             f"Unit of input: '{obj.unit}'")
+        dimensionless_exception(obj)
         unit = obj.unit
     return PhysicsData(None, unit, symbol=expr, base_symbols=obj._base_symbols)
 
