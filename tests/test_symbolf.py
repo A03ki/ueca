@@ -2,7 +2,7 @@ import pytest
 
 from ueca.data import PhysicsData
 from ueca.symbolf import (physicsdata_symbolic_exception,
-                          physicsdata_symbolic_dimensionless_exception, diff_symbol,
+                          as_symbolic_physicsdata_and_dimensionless_exception, diff_symbol,
                           exp, log, ln, sqrt, sin, cos, tan, asin, acos, atan,
                           sinh, cosh, tanh, asinh, acosh, atanh)
 
@@ -21,7 +21,7 @@ def test_physicsdata_symbolic_exception_input_physicsdata_non_symbolic_mode():
 def test_physicsdata_symbolic_dimensionless_exception():
     length = PhysicsData(1, "meter", symbol="x")
     with pytest.raises(ValueError):
-        physicsdata_symbolic_dimensionless_exception(lambda x: x)(length)
+        as_symbolic_physicsdata_and_dimensionless_exception(lambda x: x)(length)
 
 
 class TestDiffSymbol:  # test for diff_symbol
