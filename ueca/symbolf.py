@@ -26,7 +26,7 @@ def diff_symbol(obj: PhysicsData, symbol: str, n: int) -> PhysicsData:
             raise ValueError(f"unsupport differentiation by non symbol: '{symbol}'")
     elif isinstance(symbol, str):
         if symbol in obj._base_symbols:
-            tgt_unit = obj._base_symbols[symbol]
+            tgt_unit = str(obj._base_symbols[symbol].uints)
         elif obj.data.dimensionless:
             tgt_unit = "dimensionless"
         else:

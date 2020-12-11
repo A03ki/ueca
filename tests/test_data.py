@@ -151,8 +151,8 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length1 + length2 + length1
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3._base_symbols[length_symbols[0]] == unit
-        assert length3._base_symbols[length_symbols[1]] == unit
+        assert str(length3._base_symbols[length_symbols[0]].units) == unit
+        assert str(length3._base_symbols[length_symbols[1]].units) == unit
         assert len(length1._base_symbols) == 1
         assert len(length2._base_symbols) == 1
         assert len(length3._base_symbols) == 2
@@ -164,8 +164,8 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length1 - length2 - length2
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3._base_symbols[length_symbols[0]] == unit
-        assert length3._base_symbols[length_symbols[1]] == unit
+        assert str(length3._base_symbols[length_symbols[0]].units) == unit
+        assert str(length3._base_symbols[length_symbols[1]].units) == unit
         assert len(length1._base_symbols) == 1
         assert len(length2._base_symbols) == 1
         assert len(length3._base_symbols) == 2
@@ -177,8 +177,8 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length2 * length1 * length2
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3._base_symbols[length_symbols[0]] == unit
-        assert length3._base_symbols[length_symbols[1]] == unit
+        assert str(length3._base_symbols[length_symbols[0]].units) == unit
+        assert str(length3._base_symbols[length_symbols[1]].units) == unit
         assert len(length1._base_symbols) == 1
         assert len(length2._base_symbols) == 1
         assert len(length3._base_symbols) == 2
@@ -190,8 +190,8 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length2 // length1 // length1
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3._base_symbols[length_symbols[0]] == unit
-        assert length3._base_symbols[length_symbols[1]] == unit
+        assert str(length3._base_symbols[length_symbols[0]].units) == unit
+        assert str(length3._base_symbols[length_symbols[1]].units) == unit
         assert len(length1._base_symbols) == 1
         assert len(length2._base_symbols) == 1
         assert len(length3._base_symbols) == 2
@@ -203,8 +203,8 @@ class TestPhysicsDataSymbol:
         length2 = PhysicsData(length_symbols[1], unit)
         length3 = length2 / length1 / length1
         assert str(length3.magnitude) == length_symbols[2]
-        assert length3._base_symbols[length_symbols[0]] == unit
-        assert length3._base_symbols[length_symbols[1]] == unit
+        assert str(length3._base_symbols[length_symbols[0]].units) == unit
+        assert str(length3._base_symbols[length_symbols[1]].units) == unit
         assert len(length1._base_symbols) == 1
         assert len(length2._base_symbols) == 1
         assert len(length3._base_symbols) == 2
@@ -216,7 +216,7 @@ class TestPhysicsDataSymbol:
         value = PhysicsData(3, "dimensionless")
         length2 = length1 ** value
         assert str(length2.magnitude) == symbols[1]
-        assert length2._base_symbols[symbols[0]] == units[0]
+        assert str(length2._base_symbols[symbols[0]].units) == units[0]
         assert len(length2._base_symbols) == 1
 
 

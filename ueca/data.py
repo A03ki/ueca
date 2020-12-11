@@ -16,7 +16,11 @@ class PhysicsData:
             if not magnitude.isdecimal() and magnitude != "":
                 magnitude = sympy.Symbol(magnitude)
 
-        self.data = ureg.Quantity(magnitude, unit)
+        if isinstance(symbol, sympy.Basic):
+            self.data = ureg.Quantity(symbol, unit)
+        else:
+            self.data = ureg.Quantity(magnitude, unit)
+
         self.symbol = symbol
         self.left_side = left_side
 
@@ -25,8 +29,8 @@ class PhysicsData:
         else:
             self._base_symbols = base_symbols
 
-        if isinstance(magnitude, sympy.Symbol) and magnitude not in self._base_symbols:
-            self._base_symbols[str(magnitude)] = str(self.data.units)
+        if isinstance(self.magnitude, sympy.Symbol) and self.magnitude not in self._base_symbols:
+            self._base_symbols[str(self.magnitude)] = ureg.Quantity(magnitude, unit)
 
     @property
     def magnitude(self) -> Any:

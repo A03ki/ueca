@@ -84,11 +84,13 @@ class TestDiffSymbol:  # test for diff_symbol
         area = diff_symbol(volume, length1, 1)
         assert str(area.magnitude) == symbols[3]
         assert area.unit == units[1]
-        assert area._base_symbols == {symbols[1]: units[0]}
+        assert len(area._base_symbols) == 1
+        assert str(area._base_symbols[symbols[1]].units) == units[0]
         length3 = diff_symbol(area, length2, 1)
         assert str(length3.magnitude) == symbols[4]
         assert length3.unit == units[0]
-        assert length3._base_symbols == {symbols[1]: units[0]}
+        assert len(area._base_symbols) == 1
+        assert str(area._base_symbols[symbols[1]].units) == units[0]
         value = diff_symbol(length3, length2, 1)
         assert str(value.magnitude) == symbols[5]
         assert value.unit == units[3]
