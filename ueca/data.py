@@ -43,8 +43,14 @@ class PhysicsData:
     @property
     def magnitude(self) -> Any:
         if self.is_symbolic():
-            symbol_args = [sympy.Symbol(k) for k in sorted(self._base_symbols.keys())]
-            values = [self._base_symbols[k].magnitude for k in sorted(self._base_symbols.keys())]
+            base_symbols = sorted(self._base_symbols.keys())
+            symbol_args = [sympy.Symbol(k) for k in base_symbols]
+            values = []
+            for k in base_symbols:
+                data = self._base_symbols[k]
+                if isinstance(data, ureg.Measurement):
+                    data = data.value
+                values.append(data.magnitude)
             return sympy.lambdify(symbol_args, self.symbol, modules="numpy")(*values)
         return self.data.magnitude
 
@@ -53,7 +59,7 @@ class PhysicsData:
         return str(self.data.units)
 
     @property
-    def uncertainty(self) -> Real:
+    def uncertainty(self) -> Optional[Real]:
         if isinstance(self.data, ureg.Measurement):
             return self.data.error.magnitude
         return self.__uncertainty
@@ -177,7 +183,7 @@ class PhysicsData:
         return text
 
 
-def as_physicsdata(obj) -> PhysicsData:
+def as_physicsdata(obj, symbol=None) -> PhysicsData:
     if not isinstance(obj, PhysicsData):
-        obj = PhysicsData(obj, "dimensionless")
+        obj = PhysicsData(obj, "dimensionless", symbol=symbol)
     return obj
