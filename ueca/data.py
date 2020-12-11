@@ -53,7 +53,7 @@ class PhysicsData:
         return str(self.data.units)
 
     @property
-    def uncertainty(self) -> Real:
+    def uncertainty(self) -> Optional[Real]:
         if isinstance(self.data, ureg.Measurement):
             return self.data.error.magnitude
         return self.__uncertainty
