@@ -1,7 +1,8 @@
 import pytest
 
 from ueca.data import PhysicsData
-from ueca.symbolf import (physicsdata_symbolic_exception, diff_symbol,
+from ueca.symbolf import (physicsdata_symbolic_exception,
+                          physicsdata_symbolic_dimensionless_exception, diff_symbol,
                           exp, log, ln, sqrt, sin, cos, tan, asin, acos, atan,
                           sinh, cosh, tanh, asinh, acosh, atanh)
 
@@ -15,6 +16,12 @@ def test_physicsdata_symbolic_exception_input_physicsdata_non_symbolic_mode():
     length = PhysicsData(1, "meter")
     with pytest.raises(ValueError):
         physicsdata_symbolic_exception(lambda x: x)(length)
+
+
+def test_physicsdata_symbolic_dimensionless_exception():
+    length = PhysicsData(1, "meter", symbol="x")
+    with pytest.raises(ValueError):
+        physicsdata_symbolic_dimensionless_exception(lambda x: x)(length)
 
 
 class TestDiffSymbol:  # test for diff_symbol
@@ -136,128 +143,160 @@ class TestDiffSymbol:  # test for diff_symbol
 
 
 def test_exp():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = exp(length1)
     assert str(length2.symbol) == "exp(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        exp(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_log():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = log(length1)
     assert str(length2.symbol) == "log(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        log(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_ln():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = ln(length1)
     assert str(length2.symbol) == "log(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        ln(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_sqrt():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = sqrt(length1)
     assert str(length2.symbol) == "sqrt(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        sqrt(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_sin():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = sin(length1)
     assert str(length2.symbol) == "sin(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        sin(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_cos():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = cos(length1)
     assert str(length2.symbol) == "cos(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        cos(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_tan():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = tan(length1)
     assert str(length2.symbol) == "tan(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        tan(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_asin():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = asin(length1)
     assert str(length2.symbol) == "asin(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        asin(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_acos():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = acos(length1)
     assert str(length2.symbol) == "acos(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        acos(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_atan():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = atan(length1)
     assert str(length2.symbol) == "atan(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        atan(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_sinh():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = sinh(length1)
     assert str(length2.symbol) == "sinh(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        sinh(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_conh():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = cosh(length1)
     assert str(length2.symbol) == "cosh(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        cosh(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_tanh():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = tanh(length1)
     assert str(length2.symbol) == "tanh(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        tanh(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_asinh():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = asinh(length1)
     assert str(length2.symbol) == "asinh(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        asinh(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_acosh():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = acosh(length1)
     assert str(length2.symbol) == "acosh(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        acosh(PhysicsData(1, "meter", symbol="x"))
 
 
 def test_atanh():
-    length1 = PhysicsData(1, "meter", symbol="x")
+    length1 = PhysicsData(1, "dimensionless", symbol="x")
     length2 = atanh(length1)
     assert str(length2.symbol) == "atanh(x)"
     assert length2.unit == length1.unit
     assert length2._base_symbols == length1._base_symbols
+    with pytest.raises(ValueError):
+        atanh(PhysicsData(1, "meter", symbol="x"))
