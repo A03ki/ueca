@@ -2,6 +2,7 @@ import pint
 import sympy
 
 import copy
+from numbers import Real
 from typing import Any, Optional, Union
 
 
@@ -9,98 +10,153 @@ ureg = pint.UnitRegistry()
 
 
 class PhysicsData:
-    def __init__(self, magnitude, unit: str, left_side: str = "",
-                 symbols: Optional[dict] = None) -> None:
-        if isinstance(magnitude, str):
-            if not magnitude.isdecimal() and magnitude != "":
-                magnitude = sympy.Symbol(magnitude)
+    def __init__(self, magnitude: Any, unit: str, left_side: str = "",
+                 symbol: Optional[Union[str, sympy.Basic]] = None,
+                 uncertainty: Optional[Real] = None,
+                 base_symbols: Optional[dict] = None) -> None:
+        if isinstance(symbol, str):
+            if not symbol.isdecimal() and symbol != "":
+                symbol = sympy.Symbol(symbol)
 
-        self.data = ureg.Quantity(magnitude, unit)
+        if isinstance(symbol, sympy.Basic):
+            self.data = ureg.Quantity(symbol, unit)
+        else:
+            self.data = ureg.Quantity(magnitude, unit)
+            if uncertainty:
+                self.data = self.data.plus_minus(uncertainty)
+
+        self.symbol = symbol
+        self.__uncertainty = uncertainty
         self.left_side = left_side
 
-        if symbols is None:
-            self.symbols = dict()
+        if base_symbols is None:
+            self._base_symbols = dict()
         else:
-            self.symbols = symbols
+            self._base_symbols = base_symbols
 
-        if isinstance(magnitude, sympy.Symbol) and magnitude not in self.symbols:
-            self.symbols[str(magnitude)] = str(self.data.units)
+        if isinstance(symbol, sympy.Symbol) and str(symbol) not in self._base_symbols:
+            data = ureg.Quantity(magnitude, unit)
+            if uncertainty:
+                data = data.plus_minus(uncertainty)
+            self._base_symbols[str(symbol)] = data
 
     @property
     def magnitude(self) -> Any:
+        if self.is_symbolic():
+            symbol_args = [sympy.Symbol(k) for k in sorted(self._base_symbols.keys())]
+            values = [self._base_symbols[k].magnitude for k in sorted(self._base_symbols.keys())]
+            return sympy.lambdify(symbol_args, self.symbol, modules="numpy")(*values)
         return self.data.magnitude
 
     @property
     def unit(self) -> str:
         return str(self.data.units)
 
+    @property
+    def uncertainty(self) -> Real:
+        if isinstance(self.data, ureg.Measurement):
+            return self.data.error.magnitude
+        return self.__uncertainty
+
+    def is_symbolic(self):
+        if isinstance(self.symbol, sympy.Basic):
+            return True
+        return False
+
     def __add__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_data = self.data + other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_data.units), symbol=new_data.magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_data.magnitude, str(new_data.units))
 
     __radd__ = __add__
 
     def __sub__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_data = self.data - other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_data.units), symbol=new_data.magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_data.magnitude, str(new_data.units))
 
     def __rsub__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_data = other.data - self.data
-        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_data.units), symbol=new_data.magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_data.magnitude, str(new_data.units))
 
     def __mul__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_data = self.data * other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_data.units), symbol=new_data.magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_data.magnitude, str(new_data.units))
 
     __rmul__ = __mul__
 
     def __floordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_magnitude = self.data.magnitude // other.data.magnitude
         new_units = self.data.units / other.data.units
-        return PhysicsData(new_magnitude, str(new_units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_units), symbol=new_magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_magnitude, str(new_units))
 
     def __rfloordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_magnitude = other.data.magnitude // self.data.magnitude
         new_units = self.data.units / other.data.units
-        return PhysicsData(new_magnitude, str(new_units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_units), symbol=new_magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_magnitude, str(new_units))
 
     def __truediv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_data = self.data / other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_data.units), symbol=new_data.magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_data.magnitude, str(new_data.units))
 
     def __rtruediv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        symbols = copy.deepcopy(self.symbols)
-        symbols.update(other.symbols)
         new_data = other.data / self.data
-        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            symbols.update(other._base_symbols)
+            return PhysicsData(None, str(new_data.units), symbol=new_data.magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_data.magnitude, str(new_data.units))
 
     def __pow__(self, n: Union[int, float]) -> "PhysicsData":
         other = as_physicsdata(n)
-        symbols = copy.deepcopy(self.symbols)
         new_data = self.data ** other.data
-        return PhysicsData(new_data.magnitude, str(new_data.units), symbols=symbols)
+        if self.is_symbolic():
+            symbols = copy.deepcopy(self._base_symbols)
+            return PhysicsData(None, str(new_data.units), symbol=new_data.magnitude,
+                               base_symbols=symbols)
+        return PhysicsData(new_data.magnitude, str(new_data.units))
 
     def __repr__(self) -> str:
         return str(self.data)
