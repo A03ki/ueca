@@ -2,6 +2,7 @@ import pint
 import sympy
 
 import copy
+from numbers import Real
 from typing import Any, Optional, Union
 
 
@@ -11,6 +12,7 @@ ureg = pint.UnitRegistry()
 class PhysicsData:
     def __init__(self, magnitude: Any, unit: str, left_side: str = "",
                  symbol: Optional[Union[str, sympy.Basic]] = None,
+                 uncertainty: Optional[Real] = None,
                  base_symbols: Optional[dict] = None) -> None:
         if isinstance(symbol, str):
             if not symbol.isdecimal() and symbol != "":
@@ -20,8 +22,11 @@ class PhysicsData:
             self.data = ureg.Quantity(symbol, unit)
         else:
             self.data = ureg.Quantity(magnitude, unit)
+            if uncertainty:
+                self.data = self.data.plus_minus(uncertainty)
 
         self.symbol = symbol
+        self.__uncertainty = uncertainty
         self.left_side = left_side
 
         if base_symbols is None:
@@ -30,7 +35,10 @@ class PhysicsData:
             self._base_symbols = base_symbols
 
         if isinstance(symbol, sympy.Symbol) and str(symbol) not in self._base_symbols:
-            self._base_symbols[str(symbol)] = ureg.Quantity(magnitude, unit)
+            data = ureg.Quantity(magnitude, unit)
+            if uncertainty:
+                data = data.plus_minus(uncertainty)
+            self._base_symbols[str(symbol)] = data
 
     @property
     def magnitude(self) -> Any:
@@ -43,6 +51,12 @@ class PhysicsData:
     @property
     def unit(self) -> str:
         return str(self.data.units)
+
+    @property
+    def uncertainty(self) -> Real:
+        if isinstance(self.data, ureg.Measurement):
+            return self.data.error.magnitude
+        return self.__uncertainty
 
     def is_symbolic(self):
         if isinstance(self.symbol, sympy.Basic):

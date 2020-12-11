@@ -1,6 +1,6 @@
 import sympy
 
-from ueca.data import PhysicsData, as_physicsdata
+from ueca.data import PhysicsData, as_physicsdata, ureg
 
 
 class TestPhysicsData:
@@ -142,6 +142,12 @@ class TestPhysicsData:
         assert not length1.is_symbolic()
         assert length2.is_symbolic()
 
+    def test_uncertainty(self):
+        uncertainty = 0.3939
+        length1 = PhysicsData(2.345, "meter", uncertainty=uncertainty)
+        assert length1.uncertainty == uncertainty
+        assert isinstance(length1.data, ureg.Measurement)
+
 
 class TestPhysicsDataSymbol:
     def test_add(self):
@@ -252,6 +258,13 @@ class TestPhysicsDataSymbol:
         assert length2.magnitude == values[2]
         assert len(length1._base_symbols) == 1
         assert len(length2._base_symbols) == 1
+
+    def test_uncertainty(self):
+        uncertainty = 0.3939
+        length1 = PhysicsData(2.345, "meter", symbol="x", uncertainty=uncertainty)
+        assert length1.uncertainty == uncertainty
+        assert isinstance(length1._base_symbols["x"], ureg.Measurement)
+        assert not isinstance(length1.data, ureg.Measurement)
 
 
 def test_as_physicsdata_physicsdata():
