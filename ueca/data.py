@@ -172,9 +172,9 @@ class PhysicsData:
     def _repr_html_(self) -> str:
         return self.__repr__()
 
-    def _repr_latex_(self, symbolic: bool = True) -> str:
+    def _repr_latex_(self, symbolic_unit: bool = True) -> str:
         latex_spec = "{:~L}"
-        if not symbolic:
+        if not symbolic_unit:
             latex_spec = latex_spec.replace("~", "")
 
         if self.is_symbolic():
