@@ -148,6 +148,12 @@ class TestPhysicsData:
         assert length1.uncertainty == uncertainty
         assert isinstance(length1.data, ureg.Measurement)
 
+    def test_to_latex(self):
+        mass = PhysicsData(1.2, "kg")
+        assert mass.to_latex() == r"$1.2\ \mathrm{kg}$"
+        length = PhysicsData(113.241, "m", uncertainty=0.672)
+        assert length.to_latex() == r"$\left(113.2 \pm 0.7\right)\ \mathrm{m}$"
+
 
 class TestPhysicsDataSymbol:
     def test_add(self):
@@ -265,6 +271,16 @@ class TestPhysicsDataSymbol:
         assert length1.uncertainty == uncertainty
         assert isinstance(length1._base_symbols["x"], ureg.Measurement)
         assert not isinstance(length1.data, ureg.Measurement)
+
+    def test_repr_latex_(self):
+        length1 = PhysicsData(82.39, "meter", symbol="Delta lambda_i")
+        text = length1._repr_latex_()
+        assert text == r"\Delta \lambda_{i}\ \mathrm{m}"
+
+    def test_repr_latex__force_value(self):
+        length1 = PhysicsData(2.39, "meter", symbol="Delta lambda_i", uncertainty=0.46)
+        text = length1._repr_latex_(force_value=True)
+        assert text == r"\left(2.4 \pm 0.5\right)\ \mathrm{m}"
 
 
 def test_as_physicsdata_physicsdata():

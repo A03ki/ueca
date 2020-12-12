@@ -5,6 +5,8 @@ import copy
 from numbers import Real
 from typing import Any, Optional, Union
 
+from ueca.latex import translate_space_latex
+
 
 ureg = pint.UnitRegistry()
 
@@ -170,17 +172,31 @@ class PhysicsData:
     def _repr_html_(self) -> str:
         return self.__repr__()
 
-    def _repr_latex_(self, symbolic: bool = True) -> str:
+    def _repr_latex_(self, force_value: bool = False, symbolic_unit: bool = True) -> str:
         latex_spec = "{:~L}"
-        if not symbolic:
+        if not symbolic_unit:
             latex_spec = latex_spec.replace("~", "")
 
-        text = latex_spec.format(self.data)
+        if self.is_symbolic():
+            if force_value:
+                data = PhysicsData(self.magnitude, self.unit).data
+                if self.uncertainty:
+                    data = data.plus_minus(self.uncertainty)
+            else:
+                with translate_space_latex():
+                    data = PhysicsData(sympy.latex(self.symbol), self.unit).data
+        else:
+            data = self.data
+
+        text = latex_spec.format(data)
 
         if self.left_side != "":
             text = f"{self.left_side} = {text}"
 
         return text
+
+    def to_latex(self, force_value: bool = False, symbolic_unit: bool = True) -> str:
+        return f"${self._repr_latex_(force_value=force_value, symbolic_unit=symbolic_unit)}$"
 
 
 def as_physicsdata(obj, symbol=None) -> PhysicsData:
