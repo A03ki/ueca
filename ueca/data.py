@@ -9,6 +9,7 @@ from ueca.latex import translate_space_latex
 
 
 ureg = pint.UnitRegistry()
+ureg.default_system = "SI"
 
 
 class PhysicsData:
@@ -194,6 +195,11 @@ class PhysicsData:
             text = f"{self.left_side} = {text}"
 
         return text
+
+    def unit_to(self, unit: str):
+        new_data = self.data.to(unit)
+        return PhysicsData(new_data.magnitude, str(new_data.units), symbol=self.symbol,
+                           base_symbols=self._base_symbols)
 
     def to_latex(self, force_value: bool = False, symbolic_unit: bool = True) -> str:
         return f"${self._repr_latex_(force_value=force_value, symbolic_unit=symbolic_unit)}$"
