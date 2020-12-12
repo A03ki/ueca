@@ -196,6 +196,9 @@ class PhysicsData:
 
         return text
 
+    def subs(self):
+        return PhysicsData(self.magnitude, self.unit, uncertainty=self.uncertainty)
+
     def unit_to(self, unit: str):
         new_data = self.data.to(unit)
         return PhysicsData(new_data.magnitude, str(new_data.units), symbol=self.symbol,
