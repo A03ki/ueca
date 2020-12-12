@@ -41,10 +41,7 @@ def cancel(obj: PhysicsData) -> PhysicsData:
 
 
 @physicsdata_symbolic_exception
-def diff_symbol(obj: PhysicsData, symbol: str, n: int) -> PhysicsData:
-    if not (obj.symbol.is_Atom or obj.symbol.is_Pow or obj.symbol.is_Mul):
-        raise ValueError(f"unsupport differentiation for: '{obj.symbol}'")
-
+def diff(obj: PhysicsData, symbol: str, n: int) -> PhysicsData:
     if isinstance(symbol, PhysicsData):
         tgt_units = symbol.data.units
         symbol = symbol.symbol

@@ -1,7 +1,7 @@
 import sympy
 
 from ueca.data import PhysicsData, ureg
-from ueca.symbolf import cancel, diff_symbol, sqrt
+from ueca.symbolf import cancel, diff, sqrt
 
 
 def combined_standard_uncertainty(obj: PhysicsData, prefix: str = "Delta",
@@ -16,7 +16,7 @@ def combined_standard_uncertainty(obj: PhysicsData, prefix: str = "Delta",
             unit = str(data.units)
             symbol = PhysicsData(data.magnitude, unit, symbol=symbol_name)
             delta = PhysicsData(data.error.magnitude, unit, symbol=f"{prefix} {symbol_name}")
-            square_root = diff_symbol(obj, symbol, 1) * delta
+            square_root = diff(obj, symbol, 1) * delta
             if relative:
                 square_root = square_root / obj
 

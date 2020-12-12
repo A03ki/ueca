@@ -3,7 +3,7 @@ import pytest
 from ueca.data import PhysicsData
 from ueca.symbolf import (physicsdata_symbolic_exception,
                           as_symbolic_physicsdata_and_dimensionless_exception,
-                          cancel, diff_symbol,
+                          cancel, diff,
                           Rational, exp, log, ln, sqrt, sin, cos, tan, asin, acos, atan,
                           sinh, cosh, tanh, asinh, acosh, atanh)
 
@@ -35,13 +35,13 @@ def test_cancel():
     assert str(length4.symbol) == symbols[2]
 
 
-class TestDiffSymbol:  # test for diff_symbol
+class TestDiffSymbol:  # test for diff
     def test_input_physicsdata_atom(self):
         values = [1, 1]
         symbols = ["l1", "1"]
         units = ["meter", "dimensionless"]
         length = PhysicsData(values[0], units[0], symbol=symbols[0])
-        value = diff_symbol(length, length, 1)
+        value = diff(length, length, 1)
         assert str(value.symbol) == symbols[1]
         assert value.value == values[1]
         assert value.unit == units[1]
@@ -50,16 +50,24 @@ class TestDiffSymbol:  # test for diff_symbol
     def test_input_physicsdata_add(self):
         length1 = PhysicsData(1, "meter", symbol="x")
         length2 = PhysicsData(2, "meter", symbol="y")
-        length3 = length1 + length2
-        with pytest.raises(ValueError):
-            diff_symbol(length3, length1, 1)
+        length3 = 2 * length1 + 3 * length2
+        value1 = diff(length3, length1, 1)
+        assert value1.value == 2
+        assert value1.unit == "dimensionless"
+        value2 = diff(length3, length2, 1)
+        assert value2.value == 3
+        assert value2.unit == "dimensionless"
 
     def test_input_physicsdata_sub(self):
         length1 = PhysicsData(1, "meter", symbol="x")
         length2 = PhysicsData(2, "meter", symbol="y")
-        length3 = length1 - length2
-        with pytest.raises(ValueError):
-            diff_symbol(length3, length1, 1)
+        length3 = 4 * length1 - 5 * length2
+        value1 = diff(length3, length1, 1)
+        assert value1.value == 4
+        assert value1.unit == "dimensionless"
+        value2 = diff(length3, length2, 1)
+        assert value2.value == -5
+        assert value2.unit == "dimensionless"
 
     def test_input_physicsdata_mul(self):
         values = [2, 3, 6]
@@ -71,12 +79,12 @@ class TestDiffSymbol:  # test for diff_symbol
         assert str(power.symbol) == symbols[2]
         assert power.value == values[2]
         assert power.unit == units[2]
-        acceleration2 = diff_symbol(power, mass, 1)
+        acceleration2 = diff(power, mass, 1)
         assert acceleration.symbol == acceleration2.symbol
         assert acceleration.value == acceleration2.value
         assert acceleration.unit == acceleration2.unit
         assert acceleration._base_symbols == acceleration2._base_symbols
-        mass2 = diff_symbol(power, acceleration, 1)
+        mass2 = diff(power, acceleration, 1)
         assert mass.symbol == mass2.symbol
         assert mass.value == mass2.value
         assert mass.unit == mass2.unit
@@ -89,12 +97,12 @@ class TestDiffSymbol:  # test for diff_symbol
         length = PhysicsData(values[0], units[0], symbol=symbols[0])
         area = length * length
         volume = length * length * length
-        area2 = diff_symbol(volume, length, 1)
+        area2 = diff(volume, length, 1)
         assert str(area2.symbol) == symbols[1]
         assert area.unit == area2.unit
         assert area2.value == values[1]
         assert area._base_symbols == area2._base_symbols
-        length2 = diff_symbol(volume, length, 2)
+        length2 = diff(volume, length, 2)
         assert str(length2.symbol) == symbols[2]
         assert length2.value == values[2]
         assert length.unit == length2.unit
@@ -110,19 +118,19 @@ class TestDiffSymbol:  # test for diff_symbol
         assert str(volume.symbol) == symbols[2]
         assert volume.value == values[2]
         assert volume.unit == units[2]
-        area = diff_symbol(volume, length1, 1)
+        area = diff(volume, length1, 1)
         assert str(area.symbol) == symbols[3]
         assert area.value == values[3]
         assert area.unit == units[1]
         assert len(area._base_symbols) == 1
         assert str(area._base_symbols[symbols[1]].units) == units[0]
-        length3 = diff_symbol(area, length2, 1)
+        length3 = diff(area, length2, 1)
         assert str(length3.symbol) == symbols[4]
         assert length3.value == values[4]
         assert length3.unit == units[0]
         assert len(area._base_symbols) == 1
         assert str(area._base_symbols[symbols[1]].units) == units[0]
-        value = diff_symbol(length3, length2, 1)
+        value = diff(length3, length2, 1)
         assert str(value.symbol) == symbols[5]
         assert value.value == values[5]
         assert value.unit == units[3]
@@ -131,22 +139,22 @@ class TestDiffSymbol:  # test for diff_symbol
     def test_input_unexpected_type(self):
         length = PhysicsData(1, "meter", symbol="l1")
         with pytest.raises(TypeError):
-            diff_symbol(length, 3.0, 1)
+            diff(length, 3.0, 1)
 
     def test_input_physicsdata_non_symbolic_mode(self):
         length = PhysicsData(1, "meter")
         with pytest.raises(ValueError):
-            diff_symbol(length, 3.0, 1)
+            diff(length, 3.0, 1)
 
     def test_input_string_non_symbol(self):
         length = PhysicsData(1, "meter", symbol="l1")
         with pytest.raises(ValueError):
-            diff_symbol(length, "l2", 1)
+            diff(length, "l2", 1)
 
     def test_input_string_non_symbol_dimensionless(self):
         unit = "dimensionless"
         value = PhysicsData(3, unit, symbol="l1")
-        value2 = diff_symbol(value, "l2", 1)
+        value2 = diff(value, "l2", 1)
         assert str(value2.symbol) == "0"
         assert value2.value == 0
         assert value2.unit == unit
