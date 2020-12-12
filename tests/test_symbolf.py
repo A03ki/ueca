@@ -43,7 +43,7 @@ class TestDiffSymbol:  # test for diff_symbol
         length = PhysicsData(values[0], units[0], symbol=symbols[0])
         value = diff_symbol(length, length, 1)
         assert str(value.symbol) == symbols[1]
-        assert value.magnitude == values[1]
+        assert value.value == values[1]
         assert value.unit == units[1]
         assert value._base_symbols == dict()
 
@@ -69,16 +69,16 @@ class TestDiffSymbol:  # test for diff_symbol
         acceleration = PhysicsData(values[1], units[1], symbol=symbols[1])
         power = mass * acceleration
         assert str(power.symbol) == symbols[2]
-        assert power.magnitude == values[2]
+        assert power.value == values[2]
         assert power.unit == units[2]
         acceleration2 = diff_symbol(power, mass, 1)
         assert acceleration.symbol == acceleration2.symbol
-        assert acceleration.magnitude == acceleration2.magnitude
+        assert acceleration.value == acceleration2.value
         assert acceleration.unit == acceleration2.unit
         assert acceleration._base_symbols == acceleration2._base_symbols
         mass2 = diff_symbol(power, acceleration, 1)
         assert mass.symbol == mass2.symbol
-        assert mass.magnitude == mass2.magnitude
+        assert mass.value == mass2.value
         assert mass.unit == mass2.unit
         assert mass._base_symbols == mass2._base_symbols
 
@@ -92,11 +92,11 @@ class TestDiffSymbol:  # test for diff_symbol
         area2 = diff_symbol(volume, length, 1)
         assert str(area2.symbol) == symbols[1]
         assert area.unit == area2.unit
-        assert area2.magnitude == values[1]
+        assert area2.value == values[1]
         assert area._base_symbols == area2._base_symbols
         length2 = diff_symbol(volume, length, 2)
         assert str(length2.symbol) == symbols[2]
-        assert length2.magnitude == values[2]
+        assert length2.value == values[2]
         assert length.unit == length2.unit
         assert length._base_symbols == length2._base_symbols
 
@@ -108,23 +108,23 @@ class TestDiffSymbol:  # test for diff_symbol
         length2 = PhysicsData(values[1], units[0], symbol=symbols[1])
         volume = length1 * length2 * length2
         assert str(volume.symbol) == symbols[2]
-        assert volume.magnitude == values[2]
+        assert volume.value == values[2]
         assert volume.unit == units[2]
         area = diff_symbol(volume, length1, 1)
         assert str(area.symbol) == symbols[3]
-        assert area.magnitude == values[3]
+        assert area.value == values[3]
         assert area.unit == units[1]
         assert len(area._base_symbols) == 1
         assert str(area._base_symbols[symbols[1]].units) == units[0]
         length3 = diff_symbol(area, length2, 1)
         assert str(length3.symbol) == symbols[4]
-        assert length3.magnitude == values[4]
+        assert length3.value == values[4]
         assert length3.unit == units[0]
         assert len(area._base_symbols) == 1
         assert str(area._base_symbols[symbols[1]].units) == units[0]
         value = diff_symbol(length3, length2, 1)
         assert str(value.symbol) == symbols[5]
-        assert value.magnitude == values[5]
+        assert value.value == values[5]
         assert value.unit == units[3]
         assert value._base_symbols == dict()
 
@@ -148,7 +148,7 @@ class TestDiffSymbol:  # test for diff_symbol
         value = PhysicsData(3, unit, symbol="l1")
         value2 = diff_symbol(value, "l2", 1)
         assert str(value2.symbol) == "0"
-        assert value2.magnitude == 0
+        assert value2.value == 0
         assert value2.unit == unit
         assert value2._base_symbols == dict()
 
