@@ -148,6 +148,12 @@ class TestPhysicsData:
         assert length1.uncertainty == uncertainty
         assert isinstance(length1.data, ureg.Measurement)
 
+    def test_to_latex(self):
+        mass = PhysicsData(1.2, "kg")
+        assert mass.to_latex() == r"$1.2\ \mathrm{kg}$"
+        length = PhysicsData(113.241, "m", uncertainty=0.672)
+        assert length.to_latex() == r"$\left(113.2 \pm 0.7\right)\ \mathrm{m}$"
+
 
 class TestPhysicsDataSymbol:
     def test_add(self):

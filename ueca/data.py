@@ -195,6 +195,9 @@ class PhysicsData:
 
         return text
 
+    def to_latex(self, force_value: bool = False, symbolic_unit: bool = True) -> str:
+        return f"${self._repr_latex_(force_value=force_value, symbolic_unit=symbolic_unit)}$"
+
 
 def as_physicsdata(obj, symbol=None) -> PhysicsData:
     if not isinstance(obj, PhysicsData):
