@@ -160,6 +160,11 @@ class PhysicsData:
 
         text = latex_spec.format(data)
 
+        if self.unit == "dimensionless":
+            text = text.rstrip()
+            if text.endswith("\\"):
+                text = text[:-1]
+
         if self.left_side != "":
             text = f"{self.left_side} = {text}"
 
