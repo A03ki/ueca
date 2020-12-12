@@ -50,16 +50,24 @@ class TestDiffSymbol:  # test for diff_symbol
     def test_input_physicsdata_add(self):
         length1 = PhysicsData(1, "meter", symbol="x")
         length2 = PhysicsData(2, "meter", symbol="y")
-        length3 = length1 + length2
-        with pytest.raises(ValueError):
-            diff_symbol(length3, length1, 1)
+        length3 = 2 * length1 + 3 * length2
+        value1 = diff_symbol(length3, length1, 1)
+        assert value1.value == 2
+        assert value1.unit == "dimensionless"
+        value2 = diff_symbol(length3, length2, 1)
+        assert value2.value == 3
+        assert value2.unit == "dimensionless"
 
     def test_input_physicsdata_sub(self):
         length1 = PhysicsData(1, "meter", symbol="x")
         length2 = PhysicsData(2, "meter", symbol="y")
-        length3 = length1 - length2
-        with pytest.raises(ValueError):
-            diff_symbol(length3, length1, 1)
+        length3 = 4 * length1 - 5 * length2
+        value1 = diff_symbol(length3, length1, 1)
+        assert value1.value == 4
+        assert value1.unit == "dimensionless"
+        value2 = diff_symbol(length3, length2, 1)
+        assert value2.value == -5
+        assert value2.unit == "dimensionless"
 
     def test_input_physicsdata_mul(self):
         values = [2, 3, 6]
