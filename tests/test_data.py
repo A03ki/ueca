@@ -154,6 +154,15 @@ class TestPhysicsData:
         length = PhysicsData(113.241, "m", uncertainty=0.672)
         assert length.to_latex() == r"$\left(113.2 \pm 0.7\right)\ \mathrm{m}$"
 
+    def test_unit_to(self):
+        power1 = PhysicsData(1, "N", symbol="x")
+        power2 = power1.unit_to("kg*m/s^2")
+        assert power1.magnitude == power2.magnitude
+        assert power1.unit == "newton"
+        assert power2.unit == "kilogram * meter / second ** 2"
+        assert power1.symbol == power2.symbol
+        assert power1._base_symbols == power2._base_symbols
+
 
 class TestPhysicsDataSymbol:
     def test_add(self):
