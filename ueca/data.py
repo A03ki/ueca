@@ -5,6 +5,8 @@ import copy
 from numbers import Real
 from typing import Any, Optional, Union
 
+from ueca.latex import translate_space_latex
+
 
 ureg = pint.UnitRegistry()
 
@@ -175,7 +177,13 @@ class PhysicsData:
         if not symbolic:
             latex_spec = latex_spec.replace("~", "")
 
-        text = latex_spec.format(self.data)
+        if self.is_symbolic():
+            with translate_space_latex():
+                data = PhysicsData(sympy.latex(self.symbol), self.unit).data
+        else:
+            data = self.data
+
+        text = latex_spec.format(data)
 
         if self.left_side != "":
             text = f"{self.left_side} = {text}"

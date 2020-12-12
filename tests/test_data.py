@@ -266,6 +266,11 @@ class TestPhysicsDataSymbol:
         assert isinstance(length1._base_symbols["x"], ureg.Measurement)
         assert not isinstance(length1.data, ureg.Measurement)
 
+    def test_repr_latex_(self):
+        length1 = PhysicsData(82.39, "meter", symbol="Delta lambda_i")
+        text = length1._repr_latex_()
+        assert text == r"\Delta \lambda_{i}\ \mathrm{m}"
+
 
 def test_as_physicsdata_physicsdata():
     unit = "meter"
