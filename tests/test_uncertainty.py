@@ -13,17 +13,17 @@ def test_combined_standard_uncertainty_calculation():
     moment_of_inertia = Rational(1, 8) * mass * (outer_diameter ** 2 + inner_diameter ** 2)
     delta_I = combined_standard_uncertainty(moment_of_inertia)
     assert delta_I.unit == "kilogram * meter ** 2"
-    expectation = np.sqrt((mass.uncertainty * (outer_diameter.magnitude ** 2
-                          + inner_diameter.magnitude ** 2) / 8) ** 2
-                          + (mass.magnitude * outer_diameter.magnitude
+    expectation = np.sqrt((mass.uncertainty * (outer_diameter.value ** 2
+                          + inner_diameter.value ** 2) / 8) ** 2
+                          + (mass.value * outer_diameter.value
                              * outer_diameter.uncertainty / 4) ** 2
-                          + (mass.magnitude * inner_diameter.magnitude
+                          + (mass.value * inner_diameter.value
                              * inner_diameter.uncertainty / 4) ** 2)
-    assert pytest.approx(delta_I.magnitude) == expectation
+    assert pytest.approx(delta_I.value) == expectation
     delta_I_relative = combined_standard_uncertainty(moment_of_inertia, relative=True)
-    expectation = np.sqrt((mass.uncertainty / mass.magnitude) ** 2
-                          + ((2 * outer_diameter.magnitude * outer_diameter.uncertainty) ** 2
-                              + (2 * inner_diameter.magnitude * inner_diameter.uncertainty) ** 2)
-                          / (outer_diameter.magnitude ** 2 + inner_diameter.magnitude ** 2) ** 2)
-    assert pytest.approx(delta_I_relative.magnitude) == expectation
+    expectation = np.sqrt((mass.uncertainty / mass.value) ** 2
+                          + ((2 * outer_diameter.value * outer_diameter.uncertainty) ** 2
+                              + (2 * inner_diameter.value * inner_diameter.uncertainty) ** 2)
+                          / (outer_diameter.value ** 2 + inner_diameter.value ** 2) ** 2)
+    assert pytest.approx(delta_I_relative.value) == expectation
     assert delta_I_relative.unit == "dimensionless"

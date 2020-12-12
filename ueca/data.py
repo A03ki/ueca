@@ -13,7 +13,7 @@ ureg.default_system = "SI"
 
 
 class PhysicsData:
-    def __init__(self, magnitude: Any, unit: str, left_side: str = "",
+    def __init__(self, value: Any, unit: str, left_side: str = "",
                  symbol: Optional[Union[str, sympy.Basic]] = None,
                  uncertainty: Optional[Real] = None,
                  base_symbols: Optional[dict] = None) -> None:
@@ -24,7 +24,7 @@ class PhysicsData:
         if isinstance(symbol, sympy.Basic):
             self.data = ureg.Quantity(symbol, unit)
         else:
-            self.data = ureg.Quantity(magnitude, unit)
+            self.data = ureg.Quantity(value, unit)
             if uncertainty:
                 self.data = self.data.plus_minus(uncertainty)
 
@@ -38,13 +38,13 @@ class PhysicsData:
             self._base_symbols = base_symbols
 
         if isinstance(symbol, sympy.Symbol) and str(symbol) not in self._base_symbols:
-            data = ureg.Quantity(magnitude, unit)
+            data = ureg.Quantity(value, unit)
             if uncertainty:
                 data = data.plus_minus(uncertainty)
             self._base_symbols[str(symbol)] = data
 
     @property
-    def magnitude(self) -> Any:
+    def value(self) -> Any:
         if self.is_symbolic():
             base_symbols = sorted(self._base_symbols.keys())
             symbol_args = [sympy.Symbol(k) for k in base_symbols]
@@ -72,18 +72,18 @@ class PhysicsData:
             return True
         return False
 
-    def __new_instance_updated(self, magnitude: Any, unit: str,
+    def __new_instance_updated(self, value: Any, unit: str,
                                other: "PhysicsData") -> "PhysicsData":
         if self.is_symbolic():
             symbols = copy.deepcopy(self._base_symbols)
             symbols.update(other._base_symbols)
-            return PhysicsData(None, unit, symbol=magnitude,
+            return PhysicsData(None, unit, symbol=value,
                                base_symbols=symbols)
         elif other.is_symbolic():
-            return PhysicsData(None, unit, symbol=magnitude,
+            return PhysicsData(None, unit, symbol=value,
                                base_symbols=other._base_symbols)
         else:
-            return PhysicsData(magnitude, unit)
+            return PhysicsData(value, unit)
 
     def __add__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
@@ -111,15 +111,15 @@ class PhysicsData:
 
     def __floordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        new_magnitude = self.data.magnitude // other.data.magnitude
+        new_value = self.data.magnitude // other.data.magnitude
         new_unit = str(self.data.units / other.data.units)
-        return self.__new_instance_updated(new_magnitude, new_unit, other)
+        return self.__new_instance_updated(new_value, new_unit, other)
 
     def __rfloordiv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
-        new_magnitude = other.data.magnitude // self.data.magnitude
+        new_value = other.data.magnitude // self.data.magnitude
         new_unit = str(other.data.units / self.data.units)
-        return self.__new_instance_updated(new_magnitude, new_unit, other)
+        return self.__new_instance_updated(new_value, new_unit, other)
 
     def __truediv__(self, other: Any) -> "PhysicsData":
         other = as_physicsdata(other)
@@ -149,7 +149,7 @@ class PhysicsData:
 
         if self.is_symbolic():
             if force_value:
-                data = PhysicsData(self.magnitude, self.unit).data
+                data = PhysicsData(self.value, self.unit).data
                 if self.uncertainty:
                     data = data.plus_minus(self.uncertainty)
             else:
@@ -166,7 +166,7 @@ class PhysicsData:
         return text
 
     def subs(self):
-        return PhysicsData(self.magnitude, self.unit, uncertainty=self.uncertainty)
+        return PhysicsData(self.value, self.unit, uncertainty=self.uncertainty)
 
     def unit_to(self, unit: str):
         new_data = self.data.to(unit)
