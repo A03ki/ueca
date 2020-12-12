@@ -271,6 +271,11 @@ class TestPhysicsDataSymbol:
         text = length1._repr_latex_()
         assert text == r"\Delta \lambda_{i}\ \mathrm{m}"
 
+    def test_repr_latex__force_value(self):
+        length1 = PhysicsData(2.39, "meter", symbol="Delta lambda_i", uncertainty=0.46)
+        text = length1._repr_latex_(force_value=True)
+        assert text == r"\left(2.4 \pm 0.5\right)\ \mathrm{m}"
+
 
 def test_as_physicsdata_physicsdata():
     unit = "meter"
