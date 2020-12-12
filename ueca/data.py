@@ -67,7 +67,7 @@ class PhysicsData:
             return self.data.error.magnitude
         return self.__uncertainty
 
-    def is_symbolic(self):
+    def is_symbolic(self) -> bool:
         if isinstance(self.symbol, sympy.Basic):
             return True
         return False
@@ -165,7 +165,7 @@ class PhysicsData:
 
         return text
 
-    def subs(self):
+    def subs(self) -> "PhysicsData":
         return PhysicsData(self.value, self.unit, uncertainty=self.uncertainty)
 
     def unit_to(self, unit: str):
