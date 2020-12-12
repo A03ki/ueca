@@ -160,6 +160,8 @@ class TestPhysicsData:
         assert mass.to_latex() == r"$1.2\ \mathrm{kg}$"
         length = PhysicsData(113.241, "m", uncertainty=0.672)
         assert length.to_latex() == r"$\left(113.2 \pm 0.7\right)\ \mathrm{m}$"
+        length = PhysicsData(2.2, "dimensionless", uncertainty=0.6)
+        assert length.to_latex() == r"$\left(2.2 \pm 0.6\right)$"
 
     def test_unit_to(self):
         power1 = PhysicsData(1, "N", symbol="x")
@@ -367,6 +369,11 @@ class TestPhysicsDataSymbol:
         length1 = PhysicsData(82.39, "meter", symbol="Delta lambda_i")
         text = length1._repr_latex_()
         assert text == r"\Delta \lambda_{i}\ \mathrm{m}"
+
+    def test_repr_latex__dimensionless(self):
+        length1 = PhysicsData(82.39, "dimensionless", symbol="Delta theta")
+        text = length1._repr_latex_()
+        assert text == r"\Delta \theta"
 
     def test_repr_latex__force_value(self):
         length1 = PhysicsData(2.39, "meter", symbol="Delta lambda_i", uncertainty=0.46)
