@@ -9,6 +9,7 @@ from ueca.latex import translate_space_latex
 
 
 ureg = pint.UnitRegistry()
+ureg.default_system = "SI"
 
 
 class PhysicsData:
